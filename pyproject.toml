@@ -6,6 +6,8 @@ build-backend = "setuptools.build_meta"
 name = "yomogi"
 version = "0.1.0"
 description = "Command-line tools for working with text."
+readme = "README.md"
+license = {file = "LICENSE"}
 requires-python = ">=3.10"
 dependencies = [
     "Jinja2>=3.1",
