@@ -1,0 +1,1 @@
+"""Aozora Bunko download command."""

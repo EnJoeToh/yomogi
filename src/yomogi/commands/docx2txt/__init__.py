@@ -1,0 +1,1 @@
+"""DOCX text extraction command."""

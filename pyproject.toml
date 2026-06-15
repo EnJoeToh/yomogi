@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "yomogi"
+version = "0.1.0"
+description = "Command-line tools for working with text."
+requires-python = ">=3.10"
+dependencies = [
+    "Jinja2>=3.1",
+    "MarkupSafe>=2.1",
+    "pykakasi>=2.3",
+    "python-docx>=1.1",
+    "SudachiPy>=0.6.10",
+    "SudachiDict-core>=20250515",
+]
+
+[project.scripts]
+yomogi = "yomogi.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+yomogi = [
+    "commands/diff/templates/*.html",
+    "commands/scenario/templates/*.html",
+    "japanese/mora/data/*.json",
+]

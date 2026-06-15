@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <title>{{ page_title or "Scenario" }}</title>
+
+  <style>
+    /* ===== ページ設定（A4縦・横書き） ===== */
+    @page {
+      size: A4;
+      margin: 18mm 18mm 20mm 18mm;
+    }
+
+    body {
+      margin: 0;
+      background: #fff;
+      color: #111;
+      font-family: serif;
+      line-height: 1.5;
+    }
+
+    /* ===== 全体センター寄せ ===== */
+    .page {
+      width: 170mm;
+      margin: 0 auto;
+    }
+
+    /* ===== 見出し ===== */
+    .title {
+      font-family: sans-serif;
+      font-weight: 400;
+      font-size: 20pt;
+      border-left: 6px solid #555;
+      padding-left: 10px;
+      margin: 10mm 0 8mm;
+    }
+
+    .sub_title {
+      font-family: sans-serif;
+      font-weight: 400;
+      font-size: 20pt;
+      margin: 8mm 0mm 8mm;
+      padding: 1mm 2mm 1mm;
+      border: 1px solid #ddd;
+      background-color: #999;
+      color: #fff;
+    }
+
+    /* ===== シーン枠 ===== */
+    .scene {
+  position: relative;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  border-top-right-radius: 0;
+  padding: 2mm 3mm 1mm;
+  margin: 0 0 8mm;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 右上に“枠線と繋がる”四角ラベル */
+.scene-no {
+  position: absolute;
+  top: 0;
+  right: 0;
+
+  /* ラベルは枠線の内側に置くので、枠と重ならないように少し余白 */
+  padding: 0.1em 1.0em;
+
+  font-family: sans-serif;
+  font-size: 10pt;
+  font-weight: 600;
+  color: #fff;
+  background: #aaa;
+
+  /* 上辺・左辺は描かない（枠線をそのまま使う） */
+  border-top: none;
+  border-right: none;
+
+  /* 右辺・下辺だけ描く */
+  border-left: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+
+  border-radius: 0; /* ← 角丸なし */
+}
+
+    /* シーンタイトルは左寄せ */
+    .scene-title {
+      width: 100%;
+      text-align: left;
+      margin: 0 0 2mm;
+      font-family: sans-serif;
+      font-weight: 600;
+    }
+
+    /* ===== 会話（中央） ===== */
+    .serihu {
+      width: 100%;
+      text-align: center;
+      margin: 0 0 4mm;
+    }
+
+    .speaker {
+      font-family: sans-serif;
+      font-weight: 400;
+      text-align: center;
+      margin-bottom: 1mm;
+    }
+
+    .quote {
+  display: inline-block;     /* ← これが肝 */
+  max-width: 120mm;
+
+  text-align: left;          /* ← 中は左揃え */
+  line-height: 1.5;
+
+  padding-left: 1em;
+  text-indent: -1em;
+}
+
+    /* ===== ト書き・通常文（左） ===== */
+    .togaki,
+    .block {
+      width: 100%;
+      text-align: left;
+      font-family: sans-serif;
+    }
+
+    .togaki {
+      margin: 0;
+      padding-left: 2em;
+      box-sizing: border-box;
+    }
+
+    .togaki-end {
+      margin-bottom: 1.5em;
+    }
+
+    .block {
+      margin: 0 0 1mm;
+    }
+
+    .red {
+      display: inline-block;
+      color: red;
+      padding-inline: 3em;
+      padding-block: 0.15em;
+    }
+
+    .blue {
+      display: inline-block;
+      color: blue;
+      padding-inline: 3em;
+      padding-block: 0.15em;
+    }
+
+    .scene-link {
+  font-family: sans-serif;
+  text-decoration: none;
+  color: #55f;
+}
+
+.scene-link:hover {
+  text-decoration: underline;
+}
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    {% for node in nodes %}
+
+      {% if node.type == 'title' %}
+        <div class="title">{{ node.text }}</div>
+
+      {% elif node.type == 'part_title' %}
+        <div class="sub_title">{{ node.text }}</div>
+
+      {% elif node.type == 'scene' %}
+        <section class="scene" id="{{ node.id }}">
+
+          <!-- シーン番号ラベル -->
+          <div class="scene-no">{{ node.no_str }}</div>
+
+          <div class="scene-title">○{{ node.text }}</div>
+
+          {% for b in node.blocks or [] %}
+            {% if b.type == 'conversation' %}
+              <div class="serihu">
+                {% if b.speaker %}
+                  <div class="speaker">{{ b.gseq }}: {{ b.speaker }}</div>
+                {% endif %}
+                <div class="quote">{{ b.opening_mark }}{{ b.text }}{{ b.closing_mark }}</div>
+              </div>
+
+            {% elif b.type == 'togaki' %}
+              <div class="togaki{% if loop.last or loop.nextitem.type != 'togaki' %} togaki-end{% endif %}">{{ b.text }}</div>
+
+            {% else %}
+              <div class="block">{{ b.text }}</div>
+            {% endif %}
+          {% endfor %}
+
+        </section>
+      {% endif %}
+
+    {% endfor %}
+  </div>
+</body>
+</html>

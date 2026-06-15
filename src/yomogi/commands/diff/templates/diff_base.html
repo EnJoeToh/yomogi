@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ title }}</title>
+  <style>
+    html {
+      font-size: 65.6%;
+    }
+
+    body {
+      margin: 3em;
+      font-family: "Times New Roman", "YuMincho", "Hiragino Mincho ProN",
+        "Yu Mincho", "MS PMincho", serif;
+      font-size: 1.4em;
+    }
+
+    article {
+      line-height: 1.8;
+      white-space: pre-wrap;
+    }
+
+    {% block layout_style %}{% endblock %}
+
+    .insert,
+    .replace {
+      border: 1px solid #454545;
+      border-radius: 5px;
+      background: #c0dfff;
+      padding-block: 2px;
+    }
+
+    .replace {
+      cursor: pointer;
+      background: #bbf0ff;
+    }
+
+    .delete {
+      border: 1px solid #454545;
+      background: #ffadad;
+      padding-block: 2px;
+      text-decoration: line-through;
+    }
+
+    #old-text {
+      display: none;
+      position: absolute;
+      z-index: 1;
+      border: 1px solid #000;
+      border-radius: 5px;
+      background: #555;
+      color: #fff;
+      padding: 5px;
+      text-decoration: line-through;
+      white-space: pre-wrap;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <article>
+{%- for chunk in chunks -%}
+  {%- if chunk.tag == "equal" -%}
+    {{- chunk.new_text -}}
+  {%- elif chunk.tag == "delete" -%}
+    <span class="delete">{{ chunk.old_text }}</span>
+  {%- else -%}
+    <span class="{{ chunk.tag }}"{% if chunk.tag == "replace" %} data-old-text="{{ chunk.old_text }}"{% endif %}>{{ chunk.new_text }}</span>
+  {%- endif -%}
+{%- endfor -%}
+  </article>
+  <div id="old-text" role="tooltip"></div>
+  <script>
+    const oldText = document.getElementById("old-text");
+
+    function positionOldText(event) {
+      oldText.style.left = `${event.pageX - 30}px`;
+      oldText.style.top = `${event.pageY + 10}px`;
+    }
+
+    document.querySelectorAll("[data-old-text]").forEach((element) => {
+      element.addEventListener("mouseenter", (event) => {
+        oldText.textContent = element.dataset.oldText;
+        oldText.style.display = "block";
+        positionOldText(event);
+      });
+      element.addEventListener("mousemove", positionOldText);
+      element.addEventListener("mouseleave", () => {
+        oldText.style.display = "none";
+      });
+    });
+  </script>
+</body>
+</html>

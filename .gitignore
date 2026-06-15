@@ -1,0 +1,5 @@
+.DS_Store
+__pycache__/
+*.egg-info/
+build/
+data/aozora/list_person_all_extended_utf8.csv

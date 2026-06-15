@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<title>{{ page_title or "Scenario" }}</title>
+<style>
+body {
+    margin-left: 2em;
+    font-family: serif;
+}
+  article {
+    font-size: 12pt;
+    width: 65em;
+    max-width: 65em;
+    height: 20rem;
+    margin-bottom: 2rem;
+    margin-top: 2rem;
+    writing-mode: vertical-rl;
+    columns: 20rem;
+/*        column-gap: 400px;*/
+    column-gap: 47px;
+}
+  /*body {font-family: system-ui, -apple-system, "Hiragino Sans", "Noto Sans JP", sans-serif;
+        line-height: 1.8; margin: 24px;}*/
+  /*h1 {font-size: 1.8rem; margin-top: 1.5em;}*/
+  div.title{
+    font-family: sans-serif;
+    font-weight: bold;
+    font-size: 1.6em;
+    margin-left: 2rem;
+    border-left: 6px solid #555
+  }
+/*  h2 {border-left: 6px solid #555; padding-left: 10px; margin-top: 1.5em;} */
+
+  div.sub_title{
+    font-family: san-serif;
+    /*font-weight: bold;*/
+    font-size: 1.2em;
+    margin-top: 1em;
+    margin-left: 2rem;
+  }
+  /*.scene {border: 1px solid #ccc; border-radius: 12px; padding: 12px 16px;
+          margin: 20px 0; background: #f9f9f9;}*/
+  .scene {
+    border: 1px solid #ccc;
+    margin-left: 2rem;
+  }
+  /* .scene-title {font-weight: bold; margin-bottom: 6px;}*/
+  div.scene-title{
+    /*margin-right: 1em;*/
+    font-family: sans-serif;
+    /*font-size: 1.2em;*/
+    font-weight: bold;
+  }
+/*  .block {margin: 6px 0;}*/
+  /*.togaki {font-style: italic; opacity: 0.85;}*/
+  .togaki{
+    margin-top: 2em;
+    text-indent: 0em;
+    /*font-family: serif;*/
+    font-family: sans-serif;
+  }
+  /* .conv .speaker {font-weight: bold; margin-right: 0.5em;}*/
+  div.serihu{
+    margin-top: 1em;
+    text-indent: -1em;
+    font-family: serif;
+  }
+
+  .speaker{
+    font-family: sans-serif;
+  }
+
+  .red{
+    color: red;
+  }
+
+  .blue{
+    color: blue;
+  }
+
+</style>
+</head>
+<body>
+  <article>
+  {% for node in nodes %}
+    {% if node.type == 'title' %}
+      <div class="title">{{ node.text }}</div>
+
+    {% elif node.type == 'part_title' %}
+      <div class="sub_title">{{ node.text }}</div>
+
+    {% elif node.type == 'scene' %}
+      <section class="scene" id="{{ node.id }}">
+        <div class="scene-title">○{{ node.text }}</div>
+
+        {% for b in node.blocks or [] %}
+          {% if b.type == 'conversation' %}
+              <div class="serihu">
+                {% if b.speaker -%}
+                <span class="speaker">{{ b.speaker }}</span>{% endif -%}{{ b.opening_mark }}{{ b.text }}{{ b.closing_mark }}
+              </div>
+                {% elif b.type == 'togaki' %}
+            <div class="block togaki">{{ b.text }}</div>
+          {% else %}
+            <p class="block">{{ b.text }}</p>
+          {% endif %}
+        {% endfor %}
+      </section>
+    {% endif %}
+  {% endfor %}
+  </article>
+</body>
+</html>
