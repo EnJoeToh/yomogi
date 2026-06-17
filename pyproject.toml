@@ -28,5 +28,6 @@ where = ["src"]
 yomogi = [
     "commands/diff/templates/*.html",
     "commands/scenario/templates/*.html",
+    "commands/scenario/templates/*.docx",
     "japanese/mora/data/*.json",
 ]

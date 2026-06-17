@@ -33,7 +33,7 @@ pipx install --editable .
 | `yomogi kanaize` | 漢字を読みへ変換した確認用テキストを生成 |
 | `yomogi kaiwa` | 会話を含む文と前後の文をMarkdownへ抽出 |
 | `yomogi mora` | モーラと子音をSVG・HTMLで可視化 |
-| `yomogi scenario` | シナリオテキストをHTML化 |
+| `yomogi scenario` | シナリオテキストをHTML・DOCX化 |
 
 詳細:
 
